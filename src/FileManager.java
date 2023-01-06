@@ -12,11 +12,6 @@ public class FileManager {
     private final int NESTING_LEVEL = 10;
 
     /**
-     * Default path to the directory with files (if user enters the wrong one).
-     */
-    private final String FILE_PATH = System.getProperty("user.dir");
-
-    /**
      * Constant file name for output (in current project directory).
      */
     private final String OUTPUT_FILE_PATH = "output.txt";
@@ -54,6 +49,7 @@ public class FileManager {
     FileManager(String directoryPath) {
         root = new File(directoryPath);
         if (!root.exists()) {
+            String FILE_PATH = System.getProperty("user.dir") + File.separator + "TaskExample";
             root = new File(FILE_PATH);
         }
         File output = new File(OUTPUT_FILE_PATH);
@@ -107,7 +103,6 @@ public class FileManager {
                     filePath.append(fileParts[j]).append(File.separator);
                 }
                 filePath.append(fileParts[fileParts.length - 1]);
-                System.out.println("filePath: " + filePath);
                 return filePath.toString();
             }
         }
@@ -170,6 +165,9 @@ public class FileManager {
             File[] files = root.listFiles();
             if (files != null) {
                 for (File file : files) {
+                    if (file.isHidden()) {
+                        continue;
+                    }
                     if (file.isDirectory()) {
                         readDirectory(file.getAbsolutePath(), nestingLevel + 1);
                     } else {
@@ -213,10 +211,15 @@ public class FileManager {
     /**
      * Initializes the graph, adds all edges, checks for cycles,
      * launches topological sort and writes the result.
-     * @param directoryPath current directory path
      */
-    public void doManagerWork(String directoryPath) {
-        readDirectory(directoryPath, 0);
+    public void doManagerWork() {
+        System.out.println("Current directory: " + root.getAbsolutePath());
+        readDirectory(root.getAbsolutePath(), 0);
+        System.out.println("count = " + count);
+        if (count == 0) {
+            System.out.println("No files found.");
+            return;
+        }
         graph = new Graph(count);
         for (Map.Entry<File, ArrayList<File>> entry : dependencies.entrySet()) {
             var curFile = entry.getKey();

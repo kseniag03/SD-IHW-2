@@ -14,6 +14,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String path = scanner.nextLine();
         FileManager fileManager = new FileManager(path != null ? path : "");
-        fileManager.doManagerWork(path);
+        fileManager.doManagerWork();
     }
 }
