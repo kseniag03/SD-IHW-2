@@ -217,15 +217,12 @@ public class FileManager {
      */
     public void doManagerWork(String directoryPath) {
         readDirectory(directoryPath, 0);
-        //System.out.println("count = " + count);
         graph = new Graph(count);
         for (Map.Entry<File, ArrayList<File>> entry : dependencies.entrySet()) {
             var curFile = entry.getKey();
             var edgeCurFile = getKeyByValue(fileId, curFile);
             if (edgeCurFile != null) {
-                //System.out.println("File: " + entry.getKey().getName());
                 for (File file : entry.getValue()) {
-                    //System.out.println("Dependency: " + file.getName());
                     var edgeDependentFile = getKeyByValue(fileId, file);
                     if (edgeDependentFile != null) {
                         graph.addEdge(edgeDependentFile - 1, edgeCurFile - 1);
